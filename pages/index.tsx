@@ -8,6 +8,7 @@ import Row from '../components/Row'
 import { Movie } from '../typings'
 import requests from '../utils/requests'
 import useAuth from '../hooks/useAuth'
+import Plans from '../components/Plans'
 
 
 
@@ -32,10 +33,15 @@ const Home = ({
   topRated,
   trendingNow,
 } : Props) => {
-  const { logout, loading } = useAuth()
+  const { user, loading } = useAuth()
+  const subscription = true
   const showModal = useRecoilValue(modalState)
+  const movie = useRecoilValue(movieState)
+  //const list = useList(user?.uid)
 
-  if (loading) return null
+  if (loading || subscription === null) return null
+
+  if (!subscription) return <Plans />
   
   return (
     <div className="relative h-screen bg-gradient-to-b from-gray-900/10 to-[#010511] lg:h-[140vh]">
@@ -57,8 +63,8 @@ const Home = ({
 
           <Row title="Comedies" movies={comedyMovies} />
           <Row title="Scary Movies" movies={horrorMovies} />
-          <Row title="Romance Movies" movies={romanceMovies} />
-          <Row title="Documentaries" movies={documentaries} />
+          {/*<Row title="Romance Movies" movies={romanceMovies} />
+          <Row title="Documentaries" movies={documentaries} />*/}
         </section>
       </main>
 
