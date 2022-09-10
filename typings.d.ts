@@ -3,11 +3,6 @@ export interface Genre {
   name: string
 }
 
-export interface ProductStripe {
-  id: number
-  name: string
-}
-
 export interface Movie {
   title: string
   backdrop_path: string

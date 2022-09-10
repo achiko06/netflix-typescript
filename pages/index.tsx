@@ -34,7 +34,7 @@ const Home = ({
   trendingNow,
 } : Props) => {
   const { user, loading } = useAuth()
-  const subscription = true
+  const subscription = false
   const showModal = useRecoilValue(modalState)
   const movie = useRecoilValue(movieState)
   //const list = useList(user?.uid)

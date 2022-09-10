@@ -4,15 +4,22 @@ import Link from 'next/link'
 import { useState } from 'react'
 import useAuth from '../hooks/useAuth'
 //import { loadCheckout } from '../lib/stripe'
+// check from 44:58 for stripe implementation
 import Table from './Table'
 import Loader from './Loader'
-import { ProductStripe } from '../typings'
-import { CheckIcon } from '@heroicons/react/20/solid'
 
+import { CheckIcon } from '@heroicons/react/20/solid'
+import Stripe from "stripe";
+
+
+
+interface Product extends Stripe.Price {
+  product: Stripe.Product;
+}
 
 
 interface Props {
-  products: ProductStripe[]
+products: Product[];
 }
 
 function Plans() {
@@ -74,7 +81,7 @@ function Plans() {
               full hd
             </div>
 
-            <Table />
+            {/*<Table />*/}
 
             <button>Subscribe</button>
           </div>
