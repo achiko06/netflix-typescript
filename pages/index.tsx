@@ -9,8 +9,11 @@ import { Movie } from '../typings'
 import requests from '../utils/requests'
 import useAuth from '../hooks/useAuth'
 import Plans from '../components/Plans'
+import Stripe from "stripe";
 
-
+interface Product extends Stripe.Price {
+  product: Stripe.Product;
+}
 
 interface Props {
   netflixOriginals: Movie[]
@@ -21,6 +24,7 @@ interface Props {
   romanceMovies: Movie[]
   topRated: Movie[]
   trendingNow: Movie[]
+  products: Product[]
 }
 
 const Home = ({
@@ -32,16 +36,18 @@ const Home = ({
   romanceMovies,
   topRated,
   trendingNow,
+  products
 } : Props) => {
   const { user, loading } = useAuth()
-  const subscription = false
+  const subscription = true
   const showModal = useRecoilValue(modalState)
   const movie = useRecoilValue(movieState)
   //const list = useList(user?.uid)
 
   if (loading || subscription === null) return null
 
-  if (!subscription) return <Plans />
+  if (!subscription) return <Plans products={products}/>
+
   
   return (
     <div className="relative h-screen bg-gradient-to-b from-gray-900/10 to-[#010511] lg:h-[140vh]">
@@ -97,6 +103,15 @@ export const getServerSideProps = async () => {
     fetch(requests.fetchRomanceMovies).then((res) => res.json()),
     fetch(requests.fetchDocumentaries).then((res) => res.json()),
   ])
+
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+  const products = await stripe.prices.list({
+    active: true,
+    limit: 10,
+    expand: ["data.product"],
+  });
+  
   
   return {
     props: {
@@ -108,6 +123,7 @@ export const getServerSideProps = async () => {
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
       documentaries: documentaries.results,
+      products: products.data
     },
   }
 }
